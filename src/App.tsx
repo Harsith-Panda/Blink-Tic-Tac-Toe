@@ -4,8 +4,10 @@ import EmojiSelector from "./components/EmojiSelector";
 import GameControls from "./components/GameControls";
 import { EMOJI_CATEGORIES, BOARD_SIZE } from "./utility/emojis.ts";
 import { checkWinner } from "./utility/logic.ts";
+import useSound from "use-sound";
+import placeSound from "./assets/sounds/place.mp3";
+import winSound from "./assets/sounds/win.mp3";
 
-// Updated type for cell to include emoji and player info
 type Cell = { emoji: string; player: number } | null;
 const emptyBoard: Cell[][] = Array.from({ length: BOARD_SIZE }, () =>
   Array(BOARD_SIZE).fill(null),
@@ -27,6 +29,9 @@ function App() {
   }>({});
   const [categoriesSelected, setCategoriesSelected] = useState(false);
   const [winner, setWinner] = useState<number | null>(null);
+
+  const [playPlace] = useSound(placeSound);
+  const [playWin] = useSound(winSound);
 
   const handleCategorySelect = (category: string, player: number) => {
     setPlayerEmojis((prev) => ({
@@ -59,7 +64,10 @@ function App() {
     setBoard(updatedBoard);
     setEmojiQueues((prev) => ({ ...prev, [currentPlayer]: updatedQueue }));
 
+    playPlace();
+
     if (checkWinner(updatedBoard, currentPlayer)) {
+      playWin();
       setWinner(currentPlayer);
     } else {
       setCurrentPlayer((prev) => (prev === 1 ? 2 : 1));
@@ -77,8 +85,10 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center space-y-6">
-      <h1 className="text-4xl font-bold text-blue-700">🎮 Blink Tac Toe</h1>
+    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center space-y-6 animate-fadeIn">
+      <h1 className="text-4xl font-bold text-blue-700 animate-bounce">
+        🎮 Blink Tac Toe
+      </h1>
 
       {!categoriesSelected ? (
         <EmojiSelector
@@ -88,7 +98,7 @@ function App() {
       ) : (
         <>
           <div className="flex justify-between w-full max-w-md mb-4">
-            <div className="bg-white shadow-md rounded-lg p-3 w-1/2 mr-2">
+            <div className="bg-white shadow-md rounded-lg p-3 w-1/2 mr-2 transition-transform duration-300 hover:scale-105">
               <h2 className="font-semibold text-lg text-center">Player 1</h2>
               <p className="text-center capitalize">{selectedCategories[1]}</p>
               <div className="flex justify-center mt-2 space-x-1">
@@ -97,7 +107,7 @@ function App() {
                 ))}
               </div>
             </div>
-            <div className="bg-white shadow-md rounded-lg p-3 w-1/2 ml-2">
+            <div className="bg-white shadow-md rounded-lg p-3 w-1/2 ml-2 transition-transform duration-300 hover:scale-105">
               <h2 className="font-semibold text-lg text-center">Player 2</h2>
               <p className="text-center capitalize">{selectedCategories[2]}</p>
               <div className="flex justify-center mt-2 space-x-1">
