@@ -8,13 +8,11 @@ import useSound from "use-sound";
 import placeSound from "./assets/sounds/place.mp3";
 import winSound from "./assets/sounds/win.mp3";
 
-// Updated type for cell to include emoji and player info
 type Cell = { emoji: string; player: number } | null;
 const emptyBoard: Cell[][] = Array.from({ length: BOARD_SIZE }, () =>
   Array<Cell>(BOARD_SIZE).fill(null),
 );
 
-// Define valid emoji category keys
 type EmojiCategory = keyof typeof EMOJI_CATEGORIES;
 
 type Placement = { row: number; col: number };
@@ -95,8 +93,8 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center space-y-6 animate-fadeIn">
-      <h1 className="text-4xl font-bold text-blue-700 animate-bounce">
+    <div className="min-h-screen bg-gray-100 p-4 sm:p-6 flex flex-col items-center space-y-6 animate-fadeIn">
+      <h1 className="text-3xl sm:text-4xl font-bold text-blue-700 animate-bounce text-center">
         🎮 Blink Tac Toe
       </h1>
 
@@ -107,20 +105,20 @@ function App() {
         />
       ) : (
         <>
-          <div className="flex justify-between w-full max-w-md mb-4">
-            <div className="bg-white shadow-md rounded-lg p-3 w-1/2 mr-2 transition-transform duration-300 hover:scale-105">
+          <div className="flex flex-col sm:flex-row justify-between w-full max-w-2xl mb-4 gap-4">
+            <div className="bg-white shadow-md rounded-lg p-4 flex-1 transition-transform duration-300 hover:scale-105">
               <h2 className="font-semibold text-lg text-center">Player 1</h2>
               <p className="text-center capitalize">{selectedCategories[1]}</p>
-              <div className="flex justify-center mt-2 space-x-1">
+              <div className="flex justify-center mt-2 flex-wrap gap-1">
                 {playerEmojis[1].map((e) => (
                   <span key={e}>{e}</span>
                 ))}
               </div>
             </div>
-            <div className="bg-white shadow-md rounded-lg p-3 w-1/2 ml-2 transition-transform duration-300 hover:scale-105">
+            <div className="bg-white shadow-md rounded-lg p-4 flex-1 transition-transform duration-300 hover:scale-105">
               <h2 className="font-semibold text-lg text-center">Player 2</h2>
               <p className="text-center capitalize">{selectedCategories[2]}</p>
-              <div className="flex justify-center mt-2 space-x-1">
+              <div className="flex justify-center mt-2 flex-wrap gap-1">
                 {playerEmojis[2].map((e) => (
                   <span key={e}>{e}</span>
                 ))}
