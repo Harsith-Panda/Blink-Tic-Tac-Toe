@@ -34,7 +34,7 @@ function App() {
   const [playWin] = useSound(winSound);
 
   const handleCategorySelect = (
-    category: keyof typeof EMOJI_CATEGORIES,
+    category: "animals" | "food" | "sports",
     player: number,
   ) => {
     setPlayerEmojis((prev) => ({
