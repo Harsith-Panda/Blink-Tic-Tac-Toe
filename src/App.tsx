@@ -33,7 +33,10 @@ function App() {
   const [playPlace] = useSound(placeSound);
   const [playWin] = useSound(winSound);
 
-  const handleCategorySelect = (category: string, player: number) => {
+  const handleCategorySelect = (
+    category: keyof typeof EMOJI_CATEGORIES,
+    player: number,
+  ) => {
     setPlayerEmojis((prev) => ({
       ...prev,
       [player]: EMOJI_CATEGORIES[category],

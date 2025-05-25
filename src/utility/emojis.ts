@@ -1,4 +1,8 @@
-export const EMOJI_CATEGORIES = {
+export const EMOJI_CATEGORIES: {
+  animals: string[];
+  food: string[];
+  sports: string[];
+} = {
   animals: ["🐶", "🐱", "🐵", "🐰"],
   food: ["🍕", "🍟", "🍔", "🍩"],
   sports: ["⚽", "🏀", "🏈", "🎾"],
