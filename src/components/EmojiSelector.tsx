@@ -19,8 +19,7 @@ export default function EmojiSelector({ onSelect, selectedCategories }: Props) {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 justify-items-center">
             {(Object.keys(EMOJI_CATEGORIES) as EmojiCategory[]).map(
               (category) => {
-                const isSelected =
-                  selectedCategories[player as 1 | 2] === category;
+                const isSelected = selectedCategories[player] === category;
                 return (
                   <button
                     key={category}
