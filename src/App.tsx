@@ -8,35 +8,41 @@ import useSound from "use-sound";
 import placeSound from "./assets/sounds/place.mp3";
 import winSound from "./assets/sounds/win.mp3";
 
+// Updated type for cell to include emoji and player info
 type Cell = { emoji: string; player: number } | null;
 const emptyBoard: Cell[][] = Array.from({ length: BOARD_SIZE }, () =>
-  Array(BOARD_SIZE).fill(null),
+  Array<Cell>(BOARD_SIZE).fill(null),
 );
+
+// Define valid emoji category keys
+type EmojiCategory = keyof typeof EMOJI_CATEGORIES;
 
 type Placement = { row: number; col: number };
 
+type EmojiQueues = Record<1 | 2, Placement[]>;
+type PlayerEmojis = Record<1 | 2, string[]>;
+type SelectedCategories = Record<1 | 2, EmojiCategory>;
+
 function App() {
   const [board, setBoard] = useState<Cell[][]>(emptyBoard);
-  const [currentPlayer, setCurrentPlayer] = useState(1);
-  const [emojiQueues, setEmojiQueues] = useState<{
-    [key: number]: Placement[];
-  }>({ 1: [], 2: [] });
-  const [playerEmojis, setPlayerEmojis] = useState<{ [key: number]: string[] }>(
-    { 1: [], 2: [] },
-  );
-  const [selectedCategories, setSelectedCategories] = useState<{
-    [key: number]: string;
-  }>({});
-  const [categoriesSelected, setCategoriesSelected] = useState(false);
-  const [winner, setWinner] = useState<number | null>(null);
+  const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1);
+  const [emojiQueues, setEmojiQueues] = useState<EmojiQueues>({ 1: [], 2: [] });
+  const [playerEmojis, setPlayerEmojis] = useState<PlayerEmojis>({
+    1: [],
+    2: [],
+  });
+  const [selectedCategories, setSelectedCategories] =
+    useState<SelectedCategories>({ 1: "animals", 2: "food" });
+  const [categoriesSelected, setCategoriesSelected] = useState<boolean>(false);
+  const [winner, setWinner] = useState<1 | 2 | null>(null);
 
   const [playPlace] = useSound(placeSound);
   const [playWin] = useSound(winSound);
 
   const handleCategorySelect = (
-    category: "animals" | "food" | "sports",
-    player: number,
-  ) => {
+    category: EmojiCategory,
+    player: 1 | 2,
+  ): void => {
     setPlayerEmojis((prev) => ({
       ...prev,
       [player]: EMOJI_CATEGORIES[category],
@@ -45,14 +51,15 @@ function App() {
     if (player === 2) setCategoriesSelected(true);
   };
 
-  const handleCellClick = (row: number, col: number) => {
+  const handleCellClick = (row: number, col: number): void => {
     if (winner || board[row][col] !== null) return;
 
-    const emojiPool = playerEmojis[currentPlayer];
-    const emoji = emojiPool[Math.floor(Math.random() * emojiPool.length)];
+    const emojiPool: string[] = playerEmojis[currentPlayer];
+    const emoji: string =
+      emojiPool[Math.floor(Math.random() * emojiPool.length)];
 
-    const updatedBoard = board.map((row) => [...row]);
-    const updatedQueue = [...emojiQueues[currentPlayer]];
+    const updatedBoard: Cell[][] = board.map((row) => [...row]);
+    const updatedQueue: Placement[] = [...emojiQueues[currentPlayer]];
 
     if (updatedQueue.length >= 3) {
       const oldest = updatedQueue.shift();
@@ -73,18 +80,18 @@ function App() {
       playWin();
       setWinner(currentPlayer);
     } else {
-      setCurrentPlayer((prev) => (prev === 1 ? 2 : 1));
+      setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
     }
   };
 
-  const resetGame = () => {
+  const resetGame = (): void => {
     setBoard(emptyBoard);
     setCurrentPlayer(1);
     setEmojiQueues({ 1: [], 2: [] });
     setCategoriesSelected(false);
     setWinner(null);
     setPlayerEmojis({ 1: [], 2: [] });
-    setSelectedCategories({});
+    setSelectedCategories({ 1: "animals", 2: "food" });
   };
 
   return (
